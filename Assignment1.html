@@ -16,6 +16,7 @@
         font-family: palatino;
         font-weight: lighter;
         color: black;
+        margin: 10px;
         padding: 0 0 3px 0;
     }
       
@@ -40,7 +41,7 @@
         border-radius: 5px;
         color: black;
         font-family: palatino;
-        font-size: 22px;
+        font-size: 18px;
         padding: 3px;
         min-width: 100px;
     }
@@ -67,7 +68,7 @@
     <h2>Newsletter</h2>
     <div>
     Want to subscribe to my newsletter? Please enter your full name and email address below.
-      <form>
+      <form id="form1">
       <label for="firstname">First name:</label><br>
       <input type="text" id="firstname" name="firstname"><br>
       <label for="lastname">Last name:</label><br>
@@ -76,8 +77,8 @@
       <input type="text" id="email" name="email"><br>
       <input type="checkbox" id="permission" name="permission" value="permission">
       <label for="permission"> I hereby grant permission to use my email for the purposes of this newsletter.</label><br>
-      <button type="submit" value="Submit">
     </form>
+    <button type="submit" form="form1" value="submit">Submit</button>
     </div>
   </body>
 </html>
