@@ -1,0 +1,62 @@
+<h2>
+Joe's Hot Dogs<br>
+</h2>
+<div>
+Hello and welcome to Joe's Hot Dogs! Take a look at our menu. <br>
+Hotdogs : $4<br>
+Fries: $3.50<br>
+Soda: $1.50<br>
+Sauerkraut: $1 
+</div><br>
+<div>
+Please enter quantities for each item of your order!
+<form onsubmit="return calcOrder()"> 
+  <label for="hotdog">Hotdog</label>
+  <input type="text" id="hotdog" size = "6" value = "0"><br>
+  <label for="fries">Fries</label>
+  <input type="text" id="fries" size = "6" value = "0"><br>
+  <label for="soda">Soda</label>
+  <input type="text" id="soda" size = "6" value = "0"><br>
+  <label for="sauerkraut">Sauerkraut</label>
+  <input type="text" id="sauerkraut" size = "6" value = "0"><br>
+  <input type="submit" value="Submit">
+</form>
+</div><br>
+<div id = "yourOrder">
+</div>
+<div id = "yourTotal">
+</div>
+
+<script>
+// using object function
+function Items(hotdog, fries, soda, sauerkraut)
+{
+  this.hotdog = hotdog;
+  this.fries = fries;
+  this.soda = soda;
+  this.sauerkraut = sauerkraut;
+}
+function show(item){
+  return "You ordered "+item.hotdog+" hotdogs, "+item.fries+" fries, "+item.soda+" sodas, and "+item.sauerkraut+" sauerkraut.";
+}
+  
+function total(item){
+  let total = item.hotdog*4+item.fries*3.5+item.soda*1.5+item.sauerkraut;
+  return "Your total is: $"+total;
+}
+
+function calcOrder() {
+  hotdogValue = parseInt(document.getElementById('hotdog').value);
+  friesValue = parseInt(document.getElementById('fries').value);
+  sodaValue = parseInt(document.getElementById('soda').value);
+  sauerkrautValue = parseInt(document.getElementById('sauerkraut').value);
+  newOrder = new Items (hotdogValue, friesValue, sodaValue, sauerkrautValue);
+  //console.log(items);
+
+document.getElementById("yourOrder").innerHTML = show(newOrder);
+
+document.getElementById("yourTotal").innerHTML = total(newOrder);
+
+  return false;
+}
+</script>
