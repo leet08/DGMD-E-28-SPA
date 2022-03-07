@@ -41,10 +41,10 @@ function calcOrder() {
   friesValue = document.getElementById('fries').value;
   sodaValue = document.getElementById('soda').value;
   sauerkrautValue = document.getElementById('sauerkraut').value;
-  items['hotdog'] = hotdogValue;
-  items['fries'] = friesValue;
-  items['soda'] = sodaValue;
-  items['sauerkraut'] = sauerkrautValue;
+  items.hotdog = hotdogValue;
+  items.fries= friesValue;
+  items.soda = sodaValue;
+  items.sauerkraut = sauerkrautValue;
   //console.log(items);
 
 document.getElementById("yourOrder").innerHTML = "You ordered "+items['hotdog']+" hotdogs, "+items['fries']+" fries, "+items['soda']+" sodas, and "+items['sauerkraut']+" sauerkraut.";
