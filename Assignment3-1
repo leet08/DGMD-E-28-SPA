@@ -1,0 +1,53 @@
+<h2>
+Joe's Hot Dogs<br>
+</h2>
+<div>
+Hello and welcome to Joe's Hot Dogs! Take a look at our menu. <br>
+Hotdogs : $4<br>
+Fries: $3.50<br>
+Soda: $1.50<br>
+Sauerkraut: $1 
+</div><br>
+<div>
+Please enter quantities for each item of your order!
+<form onsubmit="return calcOrder()"> 
+  <label for="hotdog">Hotdog</label>
+  <input type="text" id="hotdog" size = "6" value = "0"><br>
+  <label for="fries">Fries</label>
+  <input type="text" id="fries" size = "6" value = "0"><br>
+  <label for="soda">Soda</label>
+  <input type="text" id="soda" size = "6" value = "0"><br>
+  <label for="sauerkraut">Sauerkraut</label>
+  <input type="text" id="sauerkraut" size = "6" value = "0"><br>
+  <input type="submit" value="Submit">
+</form>
+</div><br>
+<div id = "yourOrder">
+</div>
+<div id = "yourTotal">
+</div>
+
+<script>
+// using array
+var items = [];
+
+function calcOrder() {
+  hotdogValue = document.getElementById('hotdog').value;
+  items.push(hotdogValue); 
+  friesValue = document.getElementById('fries').value;
+  items.push(friesValue);  
+  sodaValue = document.getElementById('soda').value;
+  items.push(sodaValue);  
+  sauerkrautValue = document.getElementById('sauerkraut').value;
+  items.push(sauerkrautValue);  
+  //console.log(items);
+
+document.getElementById("yourOrder").innerHTML = "You ordered "+hotdogValue+" hotdogs, "+friesValue+" fries, "+sodaValue+" sodas, and "+sauerkrautValue+" sauerkraut.";
+
+let totalValue = parseInt(hotdogValue)*4+parseInt(friesValue)*3.5+parseInt(sodaValue)*1.5+parseInt(sauerkrautValue);
+
+document.getElementById("yourTotal").innerHTML = "Your total is: $"+totalValue;
+
+  return false;
+}
+</script>
