@@ -22,12 +22,12 @@ Pass
 <button id = "bet" onclick = "bet()">
 Bet
 </button>
+<input type="text" id="betMoney" size = "6" value = "100">
 <br>
 
 <div id = "handText"></div>
-
 <script>
-  function startGame() {
+ function startGame() {
 
   // create all objects in game
   gameObjects = {
@@ -35,10 +35,10 @@ Bet
     "yourDeck": [],
     "dealerHand": [],
     "yourHand": [],
-    "dealerNumberCards":2,
-    "yourNumberCards":2,
+    "dealerNumberCards": 2,
+    "yourNumberCards": 2,
     "yourMoney": 1000,
-    "roundNumber":1
+    "roundNumber": 1
   }
 
   // initialize both decks
@@ -56,77 +56,143 @@ Bet
   gameObjects.dealerDeck = shuffle(randoms);
   randoms = Array.from(Array(52).keys()).map(i => i + 1);
   gameObjects.yourDeck = shuffle(randoms);
-  
+
   // give two cards to each
-  for (let i=0; i<2; i++){
+  for (let i = 0; i < 2; i++) {
     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
     gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-    }
+  }
 
-	// log to hand text
-  document.getElementById("handText").innerHTML = "Your current hand is " +checkNumber(gameObjects.yourHand[0]) +" of "+checkSuit(gameObjects.yourHand[0])+ " and "+checkNumber(gameObjects.yourHand[1])+" of "+checkSuit(gameObjects.yourHand[1])+"<br/>";
-  
+  // log to hand text
+  document.getElementById("handText").innerHTML = "Your current hand is " + checkNumberName(gameObjects.yourHand[0]) + " of " + checkSuit(gameObjects.yourHand[0]) + " and " + checkNumberName(gameObjects.yourHand[1]) + " of " + checkSuit(gameObjects.yourHand[1]) + "<br/>";
+
   document.getElementById("start").innerHTML = "Restart"
-  
+
   console.log(gameObjects);
   return false;
 }
 
-function checkSuit(card){
-	// assume numbers 1-13 are spade, 14-26 are club, 27-39 are diamond, 40-52 are heart
-  if (card < 14) {return "spades";}
-  if (card > 13 && card < 27) {return "clubs";}
-  if (card > 26 && card < 40) {return "diamonds";}
-  if (card > 39) {return "hearts";} 
+function checkSuit(card) {
+  // assume numbers 1-13 are spade, 14-26 are club, 27-39 are diamond, 40-52 are heart
+  if (card < 14) {
+    return "spades";
+  }
+  if (card > 13 && card < 27) {
+    return "clubs";
+  }
+  if (card > 26 && card < 40) {
+    return "diamonds";
+  }
+  if (card > 39) {
+    return "hearts";
+  }
 }
 
-function checkNumber(card){
-	// if the number is a multiple of 1-10, it's 1-10
-  if (card > 13 && card < 24) {return card -13;}
-  if (card > 26 && card < 37) {return card -26}
-  if (card > 39 && card < 50) {return card -39}
+function checkNumberName(card) {
+  // if the number is a multiple of 1-10, it's 1-10
+  if (card > 13 && card < 24) {
+    return card - 13;
+  }
+  if (card > 26 && card < 37) {
+    return card - 26
+  }
+  if (card > 39 && card < 50) {
+    return card - 39
+  }
   // check if jack, queen, king
-  if (card == 11 || card == 24 || card == 37 || card == 50) {return "jack"}
-  if (card == 12 || card == 25 || card == 38 || card == 51) {return "queen"}
-  if (card == 13 || card == 26 || card == 39 || card == 52) {return "king"}
+  if (card == 11 || card == 24 || card == 37 || card == 50) {
+    return "jack"
+  }
+  if (card == 12 || card == 25 || card == 38 || card == 51) {
+    return "queen"
+  }
+  if (card == 13 || card == 26 || card == 39 || card == 52) {
+    return "king"
+  } else return card;
+}
+
+function checkNumber(card) {
+  // if the number is a multiple of 1-10, it's 1-10
+  if (card > 13 && card < 27) {
+    return card - 13;
+  }
+  if (card > 26 && card < 40) {
+    return card - 26
+  }
+  if (card > 39) {
+    return card - 39
+  }
   else return card;
 }
 
-function hit(){
-	// add card to your hand
+function hit() {
+  // add card to your hand
   gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-  gameObjects.yourNumberCards = gameObjects.yourNumberCards +1;
-  
+  gameObjects.yourNumberCards = gameObjects.yourNumberCards + 1;
+
   // log to hand text
-  node = document.createTextNode("You hit and receive a "+checkNumber(gameObjects.yourHand[gameObjects.yourNumberCards-1]) +" of "+checkSuit(gameObjects.yourHand[gameObjects.yourNumberCards-1]));
+  node = document.createTextNode("You hit and receive a " + checkNumberName(gameObjects.yourHand[gameObjects.yourNumberCards - 1]) + " of " + checkSuit(gameObjects.yourHand[gameObjects.yourNumberCards - 1]));
   document.getElementById("handText").appendChild(node);
   document.getElementById("handText").appendChild(document.createElement("br"));
-  
+
   console.log(gameObjects);
 }
 
-function pass(){
-	// remove the cards from your hand and draw two more for both
-  gameObjects.dealerHand.splice(0,2);
-  gameObjects.yourHand.splice(0,gameObjects.yourNumberCards);
-  for (let i=0; i<2; i++){
+function pass() {
+  // remove the cards from your hand and draw two more for both
+  gameObjects.dealerHand.splice(0, 2);
+  gameObjects.yourHand.splice(0, gameObjects.yourNumberCards);
+  for (let i = 0; i < 2; i++) {
     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
     gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-    }
-    gameObjects.yourNumberCards = 2;
-    
+  }
+  gameObjects.yourNumberCards = 2;
+
   // increase round
-  gameObjects.roundNumber = gameObjects.roundNumber +1;
-  
+  gameObjects.roundNumber = gameObjects.roundNumber + 1;
+
   // log to hand text
   node = document.createTextNode("You pass");
   document.getElementById("handText").appendChild(node);
   document.getElementById("handText").appendChild(document.createElement("br"));
   console.log(gameObjects);
+
+}
+
+function calcHand(hand) {
+  let handTotal = 0;
+  for (let h in hand) {
+    handTotal = handTotal + checkNumber(hand[h]);
+  }
+  //console.log("handtotal"+handTotal);
+  return handTotal;
   
+
+}
+
+function bet() {
+  // get bet amount
+  let betMoney = document.getElementById("betMoney");
+
+  // let the dealer play
+  let dealerTotal = calcHand(gameObjects.dealerHand);
+  console.log(dealerTotal);
+  while (dealerTotal < 15) {
+    // add card to hand
+    gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
+    gameObjects.dealerNumberCards = gameObjects.dealerNumberCards + 1;
+    dealerTotal = calcHand(gameObjects.dealerHand);
+  }
+  console.log(gameObjects);
+  
+  // determine who won and amount won/lost
+
+  // reset everything
+
 }
 
 
 // if deck runs out
 // if money runs out
+
 </script>
