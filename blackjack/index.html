@@ -332,7 +332,7 @@
 
    // determine who won and amount won/lost
    let yourTotal = calcHand(gameObjects.yourHand);
-   if (yourTotal > dealerTotal && yourTotal <= 21 || dealerTotal > 21) {
+   if ((yourTotal > dealerTotal && yourTotal <= 21) || (dealerTotal > 21 && yourTotal <=21)) {
 
      // add bet money
      gameObjects.yourMoney = gameObjects.yourMoney + betMoney;
