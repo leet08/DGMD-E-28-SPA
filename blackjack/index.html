@@ -1,313 +1,414 @@
 
 <h2>
-Blackjack
+  Blackjack
 </h2>
-<button id = "start" onclick = "startGame()">
-Start!
+<button id="start" onclick="startGame()">
+  Click to Start!
 </button>
 <div><br>
-Dealer's hand
+  Dealer's hand
 </div><br>
-<div id = "dealerHandGraphics">
+<div id="dealerHandGraphics">
 </div>
 <div>
-Your hand
+  Your hand
 </div><br>
-<div id = "yourHandGraphics">
+<div id="yourHandGraphics">
 </div>
-<div display = "inline-block">
-Your money: $
-</div>
-<div id = "money" display = "inline-block" padding-left="280px">
-1000
+<div display="inline-block">
+  Your money: $
+  <span id="money" display="inline-block" >
+  1000
+</span>
 </div><br>
-<button id = "hit" onclick = "hit()">
-Hit
+
+<button id="hit" onclick="hit()">
+  Hit
 </button>
-<button id = "pass" onclick = "pass()">
-Pass
+<button id="pass" onclick="pass()">
+  Pass
 </button>
-<button id = "bet" onclick = "bet()">
-Bet
+<button id="bet" onclick="bet()">
+  Bet
 </button>
-<input type="text" id="betMoney" size = "6" value = "100">
+<input type="text" id="betMoney" size="6" value="100">
 <br>
 
-<div id = "handText"></div>
+<div id="handText"></div>
+
 <script>
-  function startGame() {
+   function startGame() {
 
-  // create all objects in game
-  gameObjects = {
-    "dealerDeck": [],
-    "yourDeck": [],
-    "dealerHand": [],
-    "yourHand": [],
-    "dealerNumberCards": 2,
-    "yourNumberCards": 2,
-    "yourMoney": 1000,
-    "roundNumber": 1
-  }
+   // create all objects in game
+   gameObjects = {
+     "dealerDeck": [],
+     "yourDeck": [],
+     "dealerHand": [],
+     "yourHand": [],
+     "dealerNumberCards": 2,
+     "yourNumberCards": 2,
+     "yourMoney": 1000,
+     "roundNumber": 1
+   }
 
-  // initialize both decks
-  function shuffle(arr) {
-    var j, x, index;
-    for (index = arr.length - 1; index > 0; index--) {
-      j = Math.floor(Math.random() * (index + 1));
-      x = arr[index];
-      arr[index] = arr[j];
-      arr[j] = x;
-    }
-    return arr;
-  }
-  var randoms = Array.from(Array(52).keys()).map(i => i + 1);
-  gameObjects.dealerDeck = shuffle(randoms);
-  randoms = Array.from(Array(52).keys()).map(i => i + 1);
-  gameObjects.yourDeck = shuffle(randoms);
+   // initialize both decks
+   function shuffle(arr) {
+     var j, x, index;
+     for (index = arr.length - 1; index > 0; index--) {
+       j = Math.floor(Math.random() * (index + 1));
+       x = arr[index];
+       arr[index] = arr[j];
+       arr[j] = x;
+     }
+     return arr;
+   }
+   var randoms = Array.from(Array(52).keys()).map(i => i + 1);
+   gameObjects.dealerDeck = shuffle(randoms);
+   randoms = Array.from(Array(52).keys()).map(i => i + 1);
+   gameObjects.yourDeck = shuffle(randoms);
 
-  // give two cards to each
-  for (let i = 0; i < 2; i++) {
-    gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
-    gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-  }
+   // give two cards to each
+   for (let i = 0; i < 2; i++) {
+     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
+     gameObjects.yourHand.push(gameObjects.yourDeck.pop());
+   }
 
-  // write card graphics
-  makeCards(1);
+   // write card graphics
+   makeCards(1);
 
-  // place dealer cards
-  //document.getElementById("1").src = "https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/back.png";
+   // reset money
+   document.getElementById("money").innerHTML = gameObjects.yourMoney;
 
-  // log to hand text
-  document.getElementById("handText").innerHTML = "Your current hand is " + checkNumberName(gameObjects.yourHand[0]) + " of " + checkSuit(gameObjects.yourHand[0]) + " and " + checkNumberName(gameObjects.yourHand[1]) + " of " + checkSuit(gameObjects.yourHand[1]) + "<br/>";
+   // log to hand text
+   document.getElementById("handText").innerHTML = "Your current hand is " + checkNumberName(gameObjects.yourHand[0]) + " of " + checkSuit(gameObjects.yourHand[0]) + " and " + checkNumberName(gameObjects.yourHand[1]) + " of " + checkSuit(gameObjects.yourHand[1]) + "<br/>";
 
-  document.getElementById("start").innerHTML = "Restart"
+   document.getElementById("start").innerHTML = "Restart"
 
-  console.log(gameObjects);
-  return false;
-}
+   console.log(gameObjects);
+   return false;
+ }
 
-function makeCards(stage) {
-  var dealerString = "";
-  var dealerNum = 2 * gameObjects.dealerNumberCards;
-  var imgSource = "";
-  var yourString = "";
-  var yourNum = 2 * gameObjects.yourNumberCards;
-  var cardText ="";
+ function makeCards(stage) {
+   var dealerString = "";
+   var dealerNum = 2 * gameObjects.dealerNumberCards;
+   var imgSource = "";
+   var yourString = "";
+   var yourNum = 2 * gameObjects.yourNumberCards;
+   var cardText = "";
 
-  if (stage == 1) {
-  	// set dealer cards not revealed
-    imgSource = "src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/back.png"
-    for (let i = 1; i <= 2; i++) {
-      let cards = "";
-      for (let j = 1; j <= gameObjects.dealerNumberCards && dealerNum >= 0; j++) {
-        cards = "<div class='card' id = " + dealerNum-- + ">" + " <img " + imgSource + "> " +
-          "</div>" + cards;
-      }
-      dealerString += cards + "<br />";
-    } //for
-    document.getElementById("dealerHandGraphics").innerHTML = dealerString;
-    
-    // set your cards revealed
-    
-    for (let i = 1; i <= 2; i++) {
-      let cards = "";
-      for (let j = 1; j <= gameObjects.yourNumberCards && yourNum >= 0; j++) {
-      // if it's a suit card
-      if (j % 2 != 0) {
-      	cardText="";
-      	if (checkSuit(gameObjects.yourHand[i-1]) == "hearts") {imgSource = "src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png"}
-        if (checkSuit(gameObjects.yourHand[i-1]) == "diamonds") {imgSource = "src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png"}
-        if (checkSuit(gameObjects.yourHand[i-1]) == "clubs") {imgSource = "src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png"}
-        if (checkSuit(gameObjects.yourHand[i-1]) == "spades") {imgSource = "src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png"}
-      }
-      else {
-      	imgSource="";
-      	cardText=checkNumber(gameObjects.yourHand[i-1]);
-      }
-        cards = "<div class='card' id = " + yourNum-- + ">" +cardText+ " <img " + imgSource + "> " +
-          "</div>" + cards;
-          
-      }
-      yourString += cards + "<br />";
-    } 
-    document.getElementById("yourHandGraphics").innerHTML = yourString;
-  }
-}
+   if (stage == 1) {
+     // set dealer cards not revealed
+     imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/back.png>"
+     for (let i = 1; i <= gameObjects.dealerNumberCards; i++) {
+       let cards = "";
+       for (let j = 1; j <= 2 && dealerNum >= 0; j++) {
+         cards = "<div class='card' id = " + dealerNum-- + ">" + imgSource +
+           "</div>" + cards;
+       }
+       dealerString += cards + "<br />";
+     } //for
+     document.getElementById("dealerHandGraphics").innerHTML = dealerString;
 
-function checkSuit(card) {
-  // assume numbers 1-13 are spade, 14-26 are club, 27-39 are diamond, 40-52 are heart
-  if (card < 14) {
-    return "spades";
-  }
-  if (card > 13 && card < 27) {
-    return "clubs";
-  }
-  if (card > 26 && card < 40) {
-    return "diamonds";
-  }
-  if (card > 39) {
-    return "hearts";
-  }
-}
+     // set your cards revealed
+     imgSource = "";
+     for (let i = 1; i <= gameObjects.yourNumberCards; i++) {
+       let cards = "";
+       for (let j = 1; j <= 2 && yourNum >= 0; j++) {
+         // if it's a suit card
+         if (j % 2 != 0) {
+           cardText = "";
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "hearts") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "diamonds") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "clubs") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "spades") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+           }
+         } else {
+           imgSource = "";
+           cardText = checkNumber(gameObjects.yourHand[i - 1]);
+         }
+         cards = "<div class='card' id = " + yourNum-- + ">" + cardText + imgSource +
+           "</div>" + cards;
 
-function checkNumberName(card) {
-  // if the number is a multiple of 1-10, it's 1-10
-  if (card > 13 && card < 24) {
-    return card - 13;
-  }
-  if (card > 26 && card < 37) {
-    return card - 26
-  }
-  if (card > 39 && card < 50) {
-    return card - 39
-  }
-  // check if jack, queen, king
-  if (card == 11 || card == 24 || card == 37 || card == 50) {
-    return "jack"
-  }
-  if (card == 12 || card == 25 || card == 38 || card == 51) {
-    return "queen"
-  }
-  if (card == 13 || card == 26 || card == 39 || card == 52) {
-    return "king"
-  } else return card;
-}
+       }
+       yourString += cards + "<br />";
+     }
+     document.getElementById("yourHandGraphics").innerHTML = yourString;
+     return false;
+   }
 
-function checkNumber(card) {
-  // if the number is a multiple of 1-10, it's 1-10
-  if (card > 13 && card < 27) {
-    return card - 13;
-  }
-  if (card > 26 && card < 40) {
-    return card - 26
-  }
-  if (card > 39) {
-    return card - 39
-  } else return card;
-}
+   if (stage == 2) {
 
-function hit() {
-  // add card to your hand
-  gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-  gameObjects.yourNumberCards = gameObjects.yourNumberCards + 1;
+     // set dealer cards revealed
+     for (let i = 1; i <= gameObjects.dealerNumberCards; i++) {
+       let cards = "";
+       for (let j = 1; j <= 2 && dealerNum >= 0; j++) {
+         // if it's a suit card
+         if (j % 2 != 0) {
+           cardText = "";
+           if (checkSuit(gameObjects.dealerHand[i - 1]) == "hearts") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+           }
+           if (checkSuit(gameObjects.dealerHand[i - 1]) == "diamonds") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+           }
+           if (checkSuit(gameObjects.dealerHand[i - 1]) == "clubs") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+           }
+           if (checkSuit(gameObjects.dealerHand[i - 1]) == "spades") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+           }
+         } else {
+           imgSource = "";
+           cardText = checkNumber(gameObjects.dealerHand[i - 1]);
+         }
+         cards = "<div class='card' id = " + dealerNum-- + ">" + cardText + imgSource +
+           "</div>" + cards;
 
-  // log to hand text
-  node = document.createTextNode("You hit and receive a " + checkNumberName(gameObjects.yourHand[gameObjects.yourNumberCards - 1]) + " of " + checkSuit(gameObjects.yourHand[gameObjects.yourNumberCards - 1]));
-  document.getElementById("handText").appendChild(node);
-  document.getElementById("handText").appendChild(document.createElement("br"));
-
-  console.log(gameObjects);
-}
-
-function pass() {
-  // remove the cards from your hand and draw two more for both
-  gameObjects.dealerHand.splice(0, 2);
-  gameObjects.yourHand.splice(0, gameObjects.yourNumberCards);
-  for (let i = 0; i < 2; i++) {
-    gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
-    gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-  }
-  gameObjects.yourNumberCards = 2;
-
-  // increase round
-  gameObjects.roundNumber = gameObjects.roundNumber + 1;
-
-  // log to hand text
-  node = document.createTextNode("You pass");
-  document.getElementById("handText").appendChild(node);
-  document.getElementById("handText").appendChild(document.createElement("br"));
-  console.log(gameObjects);
-
-}
-
-function calcHand(hand) {
-  let handTotal = 0;
-  for (let h in hand) {
-    handTotal = handTotal + checkNumber(hand[h]);
-  }
-  //console.log("handtotal"+handTotal);
-  return handTotal;
-}
-
-function bet() {
-  // get bet amount
-  let betMoney = parseInt(document.getElementById("betMoney").value);
-  //console.log(betMoney);
-
-  // let the dealer play
-  let dealerTotal = calcHand(gameObjects.dealerHand);
-  //console.log(dealerTotal);
-  while (dealerTotal < 15) {
-    // add card to hand
-    gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
-    gameObjects.dealerNumberCards = gameObjects.dealerNumberCards + 1;
-    dealerTotal = calcHand(gameObjects.dealerHand);
-  }
-  //console.log(gameObjects);
-
-  // determine who won and amount won/lost
-  let yourTotal = calcHand(gameObjects.yourHand);
-  if (yourTotal > dealerTotal && yourTotal <= 21) {
-
-    // add bet money
-    gameObjects.yourMoney = gameObjects.yourMoney + betMoney;
-    document.getElementById("money").innerHTML = parseInt(document.getElementById("money").innerHTML) + betMoney;
-
-    // log to hand text
-    node = document.createTextNode("Dealer had " + dealerTotal + " and you had " + yourTotal + ". You won!");
-    document.getElementById("handText").appendChild(node);
-    document.getElementById("handText").appendChild(document.createElement("br"));
-    //console.log(gameObjects);
-  } else {
-
-    // lose bet money
-    gameObjects.yourMoney = gameObjects.yourMoney - betMoney;
-    document.getElementById("money").innerHTML = document.getElementById("money").innerHTML - betMoney;
-
-    // log to hand text
-    node = document.createTextNode("Dealer had " + dealerTotal + " and you had " + yourTotal + ". You lost...");
-    document.getElementById("handText").appendChild(node);
-    document.getElementById("handText").appendChild(document.createElement("br"));
-    //console.log(gameObjects);
-  }
-
-  // reset everything
-  // remove the cards from your hand and draw two more for both
-  gameObjects.dealerHand.splice(0, gameObjects.dealerNumberCards);
-  gameObjects.yourHand.splice(0, gameObjects.yourNumberCards);
-  for (let i = 0; i < 2; i++) {
-    gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
-    gameObjects.yourHand.push(gameObjects.yourDeck.pop());
-  }
-  gameObjects.yourNumberCards = 2;
-  gameObjects.dealerNumberCards = 2;
-
-  // increase round
-  gameObjects.roundNumber = gameObjects.roundNumber + 1;
-  //console.log(gameObjects);
-
-  // log to hand text
-  node = document.createTextNode("For your next hand you receive a " + checkNumberName(gameObjects.yourHand[1]) + " of " + checkSuit(gameObjects.yourHand[1])+" and a " + checkNumberName(gameObjects.yourHand[0]) + " of " + checkSuit(gameObjects.yourHand[0]));
-  document.getElementById("handText").appendChild(node);
-  document.getElementById("handText").appendChild(document.createElement("br"));
-}
+       }
+       dealerString += cards + "<br />";
+     }
+     document.getElementById("dealerHandGraphics").innerHTML = dealerString;
 
 
-// if deck runs out
-// if money runs out
+     // set your cards revealed
+     imgSource = "";
+     for (let i = 1; i <= gameObjects.yourNumberCards; i++) {
+       let cards = "";
+       for (let j = 1; j <= 2 && yourNum >= 0; j++) {
+         // if it's a suit card
+         if (j % 2 != 0) {
+           cardText = "";
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "hearts") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "diamonds") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "clubs") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+           }
+           if (checkSuit(gameObjects.yourHand[i - 1]) == "spades") {
+             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+           }
+         } else {
+           imgSource = "";
+           cardText = checkNumber(gameObjects.yourHand[i - 1]);
+         }
+         cards = "<div class='card' id = " + yourNum-- + ">" + cardText + imgSource +
+           "</div>" + cards;
+
+       }
+       yourString += cards + "<br />";
+     }
+     document.getElementById("yourHandGraphics").innerHTML = yourString;
+
+   }
+ }
+
+
+ function checkSuit(card) {
+   // assume numbers 1-13 are spade, 14-26 are club, 27-39 are diamond, 40-52 are heart
+   if (card < 14) {
+     return "spades";
+   }
+   if (card > 13 && card < 27) {
+     return "clubs";
+   }
+   if (card > 26 && card < 40) {
+     return "diamonds";
+   }
+   if (card > 39) {
+     return "hearts";
+   }
+ }
+
+ function checkNumberName(card) {
+   // if the number is a multiple of 1-10, it's 1-10
+   if (card > 13 && card < 24) {
+     return card - 13;
+   }
+   if (card > 26 && card < 37) {
+     return card - 26
+   }
+   if (card > 39 && card < 50) {
+     return card - 39
+   }
+   // check if jack, queen, king
+   if (card == 11 || card == 24 || card == 37 || card == 50) {
+     return "jack"
+   }
+   if (card == 12 || card == 25 || card == 38 || card == 51) {
+     return "queen"
+   }
+   if (card == 13 || card == 26 || card == 39 || card == 52) {
+     return "king"
+   } else return card;
+ }
+
+ function checkNumber(card) {
+   // if the number is a multiple of 1-10, it's 1-10
+   if (card > 13 && card < 27) {
+     return card - 13;
+   }
+   if (card > 26 && card < 40) {
+     return card - 26
+   }
+   if (card > 39) {
+     return card - 39
+   } else return card;
+ }
+
+ function hit() {
+   // add card to your hand
+   gameObjects.yourHand.push(gameObjects.yourDeck.pop());
+   gameObjects.yourNumberCards = gameObjects.yourNumberCards + 1;
+
+   // make card graphics
+   makeCards(1);
+
+   // log to hand text
+   node = document.createTextNode("You hit and receive a " + checkNumberName(gameObjects.yourHand[gameObjects.yourNumberCards - 1]) + " of " + checkSuit(gameObjects.yourHand[gameObjects.yourNumberCards - 1]));
+   document.getElementById("handText").appendChild(node);
+   document.getElementById("handText").appendChild(document.createElement("br"));
+
+   console.log(gameObjects);
+ }
+
+ function pass() {
+   // remove the cards from your hand and draw two more for both
+   gameObjects.dealerHand.splice(0, 2);
+   gameObjects.yourHand.splice(0, gameObjects.yourNumberCards);
+   for (let i = 0; i < 2; i++) {
+     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
+     gameObjects.yourHand.push(gameObjects.yourDeck.pop());
+   }
+   gameObjects.yourNumberCards = 2;
+
+   // increase round
+   gameObjects.roundNumber = gameObjects.roundNumber + 1;
+
+   // make card graphics
+   makeCards(1);
+
+   // log to hand text
+   node = document.createTextNode("You pass");
+   document.getElementById("handText").appendChild(node);
+   document.getElementById("handText").appendChild(document.createElement("br"));
+   console.log(gameObjects);
+
+ }
+
+ function calcHand(hand) {
+   let handTotal = 0;
+   for (let h in hand) {
+     handTotal = handTotal + checkNumber(hand[h]);
+   }
+   //console.log("handtotal"+handTotal);
+   return handTotal;
+ }
+
+ function bet() {
+   // get bet amount
+   let betMoney = parseInt(document.getElementById("betMoney").value);
+   //console.log(betMoney);
+
+   // let the dealer play
+   let dealerTotal = calcHand(gameObjects.dealerHand);
+   //console.log(dealerTotal);
+   while (dealerTotal < 15) {
+     // add card to hand
+     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
+     gameObjects.dealerNumberCards = gameObjects.dealerNumberCards + 1;
+     dealerTotal = calcHand(gameObjects.dealerHand);
+   }
+   //console.log(gameObjects);
+
+   // determine who won and amount won/lost
+   let yourTotal = calcHand(gameObjects.yourHand);
+   if (yourTotal > dealerTotal && yourTotal <= 21 || dealerTotal > 21) {
+
+     // add bet money
+     gameObjects.yourMoney = gameObjects.yourMoney + betMoney;
+     document.getElementById("money").innerHTML = parseInt(document.getElementById("money").innerHTML) + betMoney;
+
+     // log to hand text
+     node = document.createTextNode("Dealer had " + dealerTotal + " and you had " + yourTotal + ". You won!");
+     document.getElementById("handText").appendChild(node);
+     document.getElementById("handText").appendChild(document.createElement("br"));
+     //console.log(gameObjects);
+   } else {
+
+     // lose bet money
+     gameObjects.yourMoney = gameObjects.yourMoney - betMoney;
+     document.getElementById("money").innerHTML = document.getElementById("money").innerHTML - betMoney;
+
+     // log to hand text
+     node = document.createTextNode("Dealer had " + dealerTotal + " and you had " + yourTotal + ". You lost...");
+     document.getElementById("handText").appendChild(node);
+     document.getElementById("handText").appendChild(document.createElement("br"));
+     //console.log(gameObjects);
+   }
+
+   // make card graphics
+   makeCards(2);
+
+   // reset everything
+   // remove the cards from your hand and draw two more for both
+   gameObjects.dealerHand.splice(0, gameObjects.dealerNumberCards);
+   gameObjects.yourHand.splice(0, gameObjects.yourNumberCards);
+   for (let i = 0; i < 2; i++) {
+     gameObjects.dealerHand.push(gameObjects.dealerDeck.pop());
+     gameObjects.yourHand.push(gameObjects.yourDeck.pop());
+   }
+   gameObjects.yourNumberCards = 2;
+   gameObjects.dealerNumberCards = 2;
+
+   // increase round
+   gameObjects.roundNumber = gameObjects.roundNumber + 1;
+   console.log(gameObjects);
+
+   // make card graphics on timer
+
+   setTimeout(function() {
+     makeCards(1)
+   }, 5000);
+   setTimeout(function() {
+
+     // log to hand text
+     node = document.createTextNode("For your next hand you receive a " + checkNumberName(gameObjects.yourHand[1]) + " of " + checkSuit(gameObjects.yourHand[1]) + " and a " + checkNumberName(gameObjects.yourHand[0]) + " of " + checkSuit(gameObjects.yourHand[0]));
+     document.getElementById("handText").appendChild(node);
+     document.getElementById("handText").appendChild(document.createElement("br"));
+   }, 5000)
+ }
+
 </script>
 <css>
-  .card{
-    width: 50px;
-    height: 50px;
-    background: lightgreen;
-    display: inline-block;
-    border-style: solid;
-    font-size: 50px;
+ .card {
+  width: 50px;
+  height: 50px;
+  background: lightgreen;
+  display: inline-block;
+  border-style: solid;
+  font-size: 50px;
+  text-align: center;
+  vertical-align: text-top;
 }
 
 img {
   width: 50px;
-    height: 50px;
+  height: 50px;
 }
+
+body {
+  margin: auto;
+  width: 80%;
+}
+
 </css>
