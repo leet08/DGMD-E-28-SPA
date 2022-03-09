@@ -1,4 +1,29 @@
+<head>
+  <style>
+ .card {
+  width: 50px;
+  height: 50px;
+  background: lightgreen;
+  display: inline-block;
+  border-style: solid;
+  font-size: 50px;
+  text-align: center;
+  vertical-align: text-top;
+}
 
+  img {
+    width: 50px;
+    height: 50px;
+  }
+
+  body {
+    margin: auto;
+    width: 80%;
+  }
+
+  </style>
+</head>
+<body>
 <h2>
   Blackjack
 </h2>
@@ -35,7 +60,7 @@
 <br>
 
 <div id="handText"></div>
-
+</body>
 <script>
    function startGame() {
 
@@ -118,16 +143,16 @@
          if (j % 2 != 0) {
            cardText = "";
            if (checkSuit(gameObjects.yourHand[i - 1]) == "hearts") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+             imgSource = "<img src = /img/heart.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "diamonds") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+             imgSource = "<img src = /img/diamond.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "clubs") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+             imgSource = "<img src = /img/club.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "spades") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+             imgSource = "<img src = /img/spade.png>"
            }
          } else {
            imgSource = "";
@@ -153,16 +178,16 @@
          if (j % 2 != 0) {
            cardText = "";
            if (checkSuit(gameObjects.dealerHand[i - 1]) == "hearts") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+             imgSource = "<img src = /img/heart.png>"
            }
            if (checkSuit(gameObjects.dealerHand[i - 1]) == "diamonds") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+             imgSource = "<img src = /img/diamond.png>"
            }
            if (checkSuit(gameObjects.dealerHand[i - 1]) == "clubs") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+             imgSource = "<img src = /img/club.png>"
            }
            if (checkSuit(gameObjects.dealerHand[i - 1]) == "spades") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+             imgSource = "<img src = /img/spade.png>"
            }
          } else {
            imgSource = "";
@@ -186,16 +211,16 @@
          if (j % 2 != 0) {
            cardText = "";
            if (checkSuit(gameObjects.yourHand[i - 1]) == "hearts") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/heart.png>"
+             imgSource = "<img src = /img/heart.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "diamonds") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/diamond.png>"
+             imgSource = "<img src = /img/diamond.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "clubs") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/club.png>"
+             imgSource = "<img src = /img/club.png>"
            }
            if (checkSuit(gameObjects.yourHand[i - 1]) == "spades") {
-             imgSource = "<img src = https://raw.githubusercontent.com/leet08/DGMD-E-28-SPA/main/blackjack/img/spade.png>"
+             imgSource = "<img src = /img/spade.png>"
            }
          } else {
            imgSource = "";
@@ -389,26 +414,3 @@
  }
 
 </script>
-<css>
- .card {
-  width: 50px;
-  height: 50px;
-  background: lightgreen;
-  display: inline-block;
-  border-style: solid;
-  font-size: 50px;
-  text-align: center;
-  vertical-align: text-top;
-}
-
-img {
-  width: 50px;
-  height: 50px;
-}
-
-body {
-  margin: auto;
-  width: 80%;
-}
-
-</css>
