@@ -44,6 +44,7 @@
     <h1>
       Let's Play Wordle!
     </h1>
+    <img id = "winGif" src = "https://media.giphy.com/media/ZmgSpGW4p8EUspn0Uk/giphy.gif" width = "0px" style = "visibility: hidden">
   </div>
   <div class="squares">
     <div id="1" class="word">
@@ -274,6 +275,8 @@
     document.getElementById("start").innerHTML = "Restart";
     document.getElementById("enteredWord").innerHTML = "";
     document.getElementById("pastWords").innerHTML = "";
+    document.getElementById("winGif").style.visibility = 'hidden';
+    document.getElementById("winGif").width = '0';
   }
 
   function nextTurn() {
@@ -289,8 +292,13 @@
   }
 
   function winGame() {
+    
+    document.getElementById("winGif").style.visibility = 'visible';
+    document.getElementById("winGif").width = '400';
     alert("Congratulations! You got the word " + this.letters.join("") + " right in " + this.turn + " turns!");
-    this.start();
+    setTimeout(function () {this.start();
+    }, 5000);
+    
   }
 
 
