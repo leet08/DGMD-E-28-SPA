@@ -1,0 +1,337 @@
+<head>
+<style>
+.word {
+  float: left;
+  width: 20px;
+  padding: 5px;
+  border: 2px solid gray;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  display: flex;
+  margin: 2px;
+}
+
+#squares {
+  float: left;
+  margin: auto;
+  width: 90%;
+  padding: 5px;
+  border: 2px solid gray;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#keyboard {
+  margin: auto;
+  width: 90%;
+  margin-top: 100px;
+}
+
+</style>
+</head>
+<body>
+  <h1>
+    Let's Play Wordle!
+  </h1>
+  <div class="squares">
+    <div id="1" class="word">
+    </div>
+    <div id="2" class="word">
+    </div>
+    <div id="3" class="word">
+    </div>
+    <div id="4" class="word">
+    </div>
+    <div id="5" class="word">
+    </div>
+
+  </div>
+  <div id="keyboard">
+  </div><br>
+  <button id="start" onclick="start()">
+    Click to start!
+  </button>
+  <button id="debug" onclick="debugToggle()">
+    Debug is OFF
+  </button><br><br>
+  <div id="turn">
+  </div>
+  <div id="guess">
+
+  </div>
+  <div id="enteredWord">
+
+  </div><br>
+  <div id = "guess2">
+  </div>
+  <div id ="pastWords">
+  
+  </div>
+  <br>
+  <div id="word">
+
+  </div>
+
+</body>
+<script>
+  // build objects
+  function Word() {
+    this.letters = [];
+    this.usedLetters = [];
+    this.valid = false;
+    this.createWord = createWord;
+    this.checkWord = checkWord;
+    this.pushLetter = pushLetter;
+    this.deleteLetter = deleteLetter;
+  }
+
+  // api call to generate word and place in letters
+  async function createWord() {
+
+    this.letters = "test";
+
+    while (this.letters == "test") {
+      await fetch('https://random-word-api.herokuapp.com/word?number=10&swear=0')
+        .then(response => response.json())
+        .then(response => {
+          //console.log(response);
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].length == 5) {
+              this.letters = response[i].split("");
+              this.letters = this.letters.map(element => {
+                return element.toUpperCase();
+              });
+              console.log(this.letters);
+            }
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    // this.letters = ['A', 'A', 'B', 'B', 'B'];
+    this.usedLetters = [];
+    //console.log(this.letters);
+
+    // for debug mode show word
+    document.getElementById("word").innerHTML = this.letters;
+    document.getElementById("word").style.visibility = 'hidden';
+
+
+  }
+
+  // check valid word
+  async function checkValid() {
+
+
+
+    //console.log(this.usedLetters.join(""));
+    await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + this.usedLetters.join(""))
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        //console.log(response['title']);
+        if (response['title'] == "No Definitions Found") {
+          alert("invalid word");
+          this.valid = false;
+        } else {
+          this.valid = true;
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
+
+  // check letters of word
+  async function checkWord() {
+    if (this.usedLetters.length < 5) {
+      alert("You need to enter more letters");
+      return;
+    }
+    // call API to check if it's a valid word
+    await checkValid();
+    console.log(this.valid);
+
+    if (this.valid) {
+
+      let matchNum = 0;
+      for (let i = 0; i < this.letters.length; i++) {
+
+        // color in keyboard key
+        document.getElementById(this.usedLetters[i]).style.color = "red";
+
+        // check each letter to see if it matches in position
+        if (this.letters[i] == this.usedLetters[i]) {
+          console.log("match " + this.usedLetters[i] + " in position " + (i + 1));
+          // place on screen
+          document.getElementById(String(i + 1)).innerHTML = this.letters[i];
+          matchNum = matchNum + 1;
+        }
+
+        // check each letter to see if it's there at all
+        if (this.letters.includes(this.usedLetters[i])) {
+          console.log("match " + this.usedLetters[i] + " in wrong position");
+          // color in keyboard key only
+          document.getElementById(this.usedLetters[i]).style.color = "green";
+        }
+
+
+
+      }
+
+      // check for win condition
+      if (matchNum == 5) {
+        winGame();
+        return;
+      }
+
+      // reset
+      nextTurn();
+      this.usedLetters = [];
+      this.valid = false;
+    }
+
+
+  }
+
+
+  function pushLetter(char) {
+    if (this.usedLetters.length < 5) {
+      this.usedLetters.push(char);
+      //console.log(this.usedLetters);
+    }
+    document.getElementById("enteredWord").innerHTML = this.usedLetters;
+  }
+
+  function deleteLetter() {
+    this.usedLetters.pop();
+    document.getElementById("enteredWord").innerHTML = this.usedLetters;
+  }
+  
+  function Game() {
+    this.turn = turn;
+    this.start = start;
+    this.debug = "";
+    this.debugToggle = debugToggle;
+    this.nextTurn = nextTurn;
+    this.winGame = winGame;
+  }
+
+  function debugToggle() {
+    //console.log(this.debug);
+    if (this.debug == false) {
+      this.debug = true;
+      document.getElementById("debug").innerHTML = "Debug is ON"
+      document.getElementById("word").style.visibility = 'visible'
+      return;
+    }
+    if (this.debug == true) {
+      this.debug = false;
+      document.getElementById("debug").innerHTML = "Debug is OFF"
+      document.getElementById("word").style.visibility = 'hidden'
+    }
+    return;
+  }
+  // start and restart function
+  function start() {
+    this.turn = 1;
+    this.debug = false;
+
+    // reset letter squares
+    document.getElementById("1").innerHTML = "_";
+    document.getElementById("2").innerHTML = "_";
+    document.getElementById("3").innerHTML = "_";
+    document.getElementById("4").innerHTML = "_";
+    document.getElementById("5").innerHTML = "_";
+
+    // reset keyboard
+    document.getElementById("keyboard").innerHTML = "";
+
+    // create keyboard
+    makeKeyboard();
+    // create word
+    word1 = new Word();
+    createWord();
+
+    // update UI
+    document.getElementById("turn").innerHTML = "Turn: " + this.turn;
+    document.getElementById("guess").innerHTML = "Your guess:";
+    document.getElementById("guess2").innerHTML = "Past guesses:";
+    document.getElementById("start").innerHTML = "Restart";
+    document.getElementById("enteredWord").innerHTML = "";
+    document.getElementById("pastWords").innerHTML = "";
+  }
+
+  function nextTurn() {
+    if (this.turn < 6) {
+      this.turn = parseInt(this.turn + 1);
+      document.getElementById("enteredWord").innerHTML = "";
+      document.getElementById("turn").innerHTML = "Turn: " + this.turn;
+      document.getElementById("pastWords").innerHTML = document.getElementById("pastWords").innerHTML+ this.usedLetters + "<br>";
+    } else {
+      alert("You lost, the word was "+ this.usedLetters.join("") + ". Starting new game...");
+      this.start();
+    }
+  }
+
+  function winGame() {
+    alert("Congratulations! You got the word " + this.letters.join("") + " right in " + this.turn + " turns!");
+    this.start();
+  }
+
+
+  function makeKeyboard() {
+    // draw keyboard buttons
+
+    for (let i = 65; i <= 92; i++) {
+      const button = document.createElement('button');
+      const char = String.fromCharCode(i);
+      const span = document.createElement('span');
+      span.style.fontSize = '20px';
+      span.appendChild(document.createTextNode(char));
+      button.appendChild(span);
+      document.getElementById("keyboard").appendChild(button);
+      button.setAttribute('id', char);
+      button.style.padding = '10px';
+      button.style.margin = '2px';
+      button.onclick = function() {
+        //getLetter(char)
+        pushLetter(char)
+      };
+
+    }
+
+    // also create enter and backspace
+    document.getElementById("[").setAttribute('id', "Delete");
+    document.getElementById("Delete").innerHTML = "<span style=\"font-size: 20px;\">Delete</span>";
+    document.getElementById("Delete").onclick = function() {
+      //getLetter("Delete")
+      deleteLetter();
+    };
+    document.getElementById("\\").setAttribute('id', "Enter");
+    document.getElementById("Enter").innerHTML = "<span style=\"font-size: 20px;\">Enter</span>";
+    document.getElementById("Enter").onclick = function() {
+      //getLetter("Enter")
+      checkWord();
+    };
+
+
+    function getLetter(id) {
+      const letter = document.getElementById(id).textContent;
+      console.log(letter);
+    }
+  }
+
+
+
+  // onload
+  window.onload = function() {
+    game1 = new Game();
+    // game1.start();
+
+  }
+
+</script>
