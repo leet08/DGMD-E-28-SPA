@@ -1,42 +1,50 @@
 <head>
-<style>
-.word {
-  float: left;
-  width: 20px;
-  padding: 5px;
-  border: 2px solid gray;
-  border-radius: 3px;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-  display: flex;
-  margin: 2px;
-}
+  <style>
+    div {
+      margin-left: 20px;
+      margin-right: 20px;
 
-#squares {
-  float: left;
-  margin: auto;
-  width: 90%;
-  padding: 5px;
-  border: 2px solid gray;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
+    }
 
-#keyboard {
-  margin: auto;
-  width: 90%;
-  margin-top: 100px;
-}
+    .word {
+      float: left;
+      width: 20px;
+      padding: 5px;
+      border: 2px solid gray;
+      border-radius: 3px;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      display: flex;
+      margin: 2px;
+    }
 
-</style>
+    #squares {
+      float: left;
+      padding: 5px;
+      border: 2px solid gray;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #keyboard {
+      margin: auto;
+      width: 90%;
+      margin-top: 100px;
+    }
+
+  </style>
 </head>
+
 <body>
-  <h1>
-    Let's Play Wordle!
-  </h1>
+  <div>
+
+    <h1>
+      Let's Play Wordle!
+    </h1>
+  </div>
   <div class="squares">
     <div id="1" class="word">
     </div>
@@ -52,12 +60,15 @@
   </div>
   <div id="keyboard">
   </div><br>
-  <button id="start" onclick="start()">
-    Click to start!
-  </button>
-  <button id="debug" onclick="debugToggle()">
-    Debug is OFF
-  </button><br><br>
+  <div>
+
+    <button id="start" onclick="start()">
+      Click to start!
+    </button>
+    <button id="debug" onclick="debugToggle()">
+      Debug is OFF
+    </button><br><br>
+  </div>
   <div id="turn">
   </div>
   <div id="guess">
@@ -66,10 +77,10 @@
   <div id="enteredWord">
 
   </div><br>
-  <div id = "guess2">
+  <div id="guess2">
   </div>
-  <div id ="pastWords">
-  
+  <div id="pastWords">
+
   </div>
   <br>
   <div id="word">
@@ -210,7 +221,7 @@
     this.usedLetters.pop();
     document.getElementById("enteredWord").innerHTML = this.usedLetters;
   }
-  
+
   function Game() {
     this.turn = turn;
     this.start = start;
@@ -270,9 +281,9 @@
       this.turn = parseInt(this.turn + 1);
       document.getElementById("enteredWord").innerHTML = "";
       document.getElementById("turn").innerHTML = "Turn: " + this.turn;
-      document.getElementById("pastWords").innerHTML = document.getElementById("pastWords").innerHTML+ this.usedLetters + "<br>";
+      document.getElementById("pastWords").innerHTML = document.getElementById("pastWords").innerHTML + this.usedLetters + "<br>";
     } else {
-      alert("You lost, the word was "+ this.usedLetters.join("") + ". Starting new game...");
+      alert("You lost, the word was " + this.letters.join("") + ". Starting new game...");
       this.start();
     }
   }
