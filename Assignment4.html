@@ -6,6 +6,10 @@
 
     }
 
+    .text {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
     .word {
       float: left;
       width: 20px;
@@ -44,7 +48,7 @@
     <h1>
       Let's Play Wordle!
     </h1>
-    <img id = "winGif" src = "https://media.giphy.com/media/ZmgSpGW4p8EUspn0Uk/giphy.gif" width = "0px" style = "visibility: hidden">
+    <img id="winGif" src="https://media.giphy.com/media/ZmgSpGW4p8EUspn0Uk/giphy.gif" width="0px" style="visibility: hidden">
   </div>
   <div class="squares">
     <div id="1" class="word">
@@ -57,7 +61,6 @@
     </div>
     <div id="5" class="word">
     </div>
-
   </div>
   <div id="keyboard">
   </div><br>
@@ -68,24 +71,27 @@
     </button>
     <button id="debug" onclick="debugToggle()">
       Debug is OFF
+    </button>
+    <button id="hint" onclick="hint()">
+      Hint
     </button><br><br>
-  </div>
-  <div id="turn">
-  </div>
-  <div id="guess">
+    <div id="turn" class="text">
+    </div>
+    <div id="guess" class="text">
 
-  </div>
-  <div id="enteredWord">
+    </div>
+    <div id="enteredWord" class="text">
 
-  </div><br>
-  <div id="guess2">
-  </div>
-  <div id="pastWords">
+    </div><br>
+    <div id="guess2" class="text">
+    </div>
+    <div id="pastWords" class="text">
 
-  </div>
-  <br>
-  <div id="word">
+    </div>
+    <br>
+    <div id="word" class="text">
 
+    </div>
   </div>
 
 </body>
@@ -292,13 +298,14 @@
   }
 
   function winGame() {
-    
+
     document.getElementById("winGif").style.visibility = 'visible';
     document.getElementById("winGif").width = '400';
     alert("Congratulations! You got the word " + this.letters.join("") + " right in " + this.turn + " turns!");
-    setTimeout(function () {this.start();
+    setTimeout(function() {
+      this.start();
     }, 5000);
-    
+
   }
 
 
@@ -344,6 +351,21 @@
     }
   }
 
+  function hint() {
+
+    let rand = Math.floor((Math.random() * 26) + 65);
+    let randChar = String.fromCharCode(rand);
+
+    // check each letter to see if it's there at all
+    while (this.letters.includes(randChar)) {
+      rand = Math.floor((Math.random() * 26) + 65);
+      randChar = String.fromCharCode(rand);
+
+    }
+    // color in keyboard key only
+    document.getElementById(randChar).style.color = "red";
+    console.log("Getting hint for letter " + randChar);
+  }
 
 
   // onload
