@@ -1,166 +1,379 @@
+<head>
+  <style>
+    div {
+      margin-left: 20px;
+      margin-right: 20px;
+
+    }
+
+    .text {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .word {
+      float: left;
+      width: 20px;
+      padding: 5px;
+      border: 2px solid gray;
+      border-radius: 3px;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      display: flex;
+      margin: 2px;
+    }
+
+    #squares {
+      float: left;
+      padding: 5px;
+      border: 2px solid gray;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #keyboard {
+      margin-left: 20px;
+      width: 90%;
+      max-width: 400px;
+      margin-top: 70px;
+    }
+
+  </style>
+</head>
+
 <body>
+  <div>
 
-  <h1>
-    Hebrew Verse Memorization
-  </h1>
-  <button id="start" onclick="start()">
-    Genesis 1:1-31
-  </button><br>
-  <div id="verseLine">Verse <span id="verseNumberText">1</span></div>
-  <p class = "hebrew" id="verseBox">Click the correct word below</p>
-  <button id="1" class = "hebrew" onclick="select(this.id, this.innerHTML)">x
-  </button>
-  <button id="2" class = "hebrew" onclick="select(this.id, this.innerHTML)">x
-  </button>
-  <button id="3" class = "hebrew" onclick="select(this.id, this.innerHTML)">x
-  </button>
-  <button id="4" class = "hebrew" onclick="select(this.id, this.innerHTML)">x
-  </button>
-  <button id="5" class = "hebrew" onclick="select(this.id, this.innerHTML)">x
-  </button>
+    <h1>
+      Let's Play Wordle!
+    </h1>
+    <img id="winGif" src="https://media.giphy.com/media/ZmgSpGW4p8EUspn0Uk/giphy.gif" width="0px" style="visibility: hidden">
+  </div>
+  <div class="squares">
+    <div id="1" class="word">
+    </div>
+    <div id="2" class="word">
+    </div>
+    <div id="3" class="word">
+    </div>
+    <div id="4" class="word">
+    </div>
+    <div id="5" class="word">
+    </div>
+  </div>
+  <div id="keyboard">
+  </div><br>
+  <div>
 
-  <script>
-    function start() {
-      // import text
+    <button id="start" onclick="start()">
+      Click to start!
+    </button>
+    <button id="debug" onclick="debugToggle()">
+      Debug is OFF
+    </button>
+    <button id="hint" onclick="hint()">
+      Hint
+    </button><br><br>
+    <div id="turn" class="text">
+    </div>
+    <div id="guess" class="text">
 
-      // reset buttons
-      for (let i = 1; i <= 5; i++) {
-        document.getElementById(i).innerHTML = "";
-      }
+    </div>
+    <div id="enteredWord" class="text">
 
-      // split text into one whole array for word bank
-      let text = "בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ * וְהָאָרֶץ הָיְתָה תֹהוּ וָבֹהוּ וְחֹשֶׁךְ עַל פְּנֵי תְהוֹם וְרוּחַ אֱלֹהִים  מְרַחֶפֶ עַל פְּנֵי הַמָּיִם * וַיֹּאמֶר אֱלֹהִים יְהִי אוֹר וַיְהִי אוֹר * וַיַּרְא אֱלֹהִים אֶת הָאוֹר כִּי טוֹב וַיַּבְדֵּל אֱלֹהִים בֵּין הָאוֹר וּבֵין הַחֹשֶׁךְ";
+    </div><br>
+    <div id="guess2" class="text">
+    </div>
+    <div id="pastWords" class="text">
 
-      this.wordBankSet = text.split(" ");
+    </div>
+    <br>
+    <div id="word" class="text">
 
-      // remove duplicates and empties and asterisks
-      this.wordBankSet = this.wordBankSet.filter(s => s !== "*");
-      this.wordBankSet = this.wordBankSet.filter(s => s !== "");
-      this.wordBankSet = [...new Set(this.wordBankSet)];
+    </div>
+  </div>
 
-      // split into verses
-      this.wholeVerseArray = text.split("*");
-
-      // add each verse to its own array split by words
-      this.verseArray = [];
-      for (i = 0; i < this.wholeVerseArray.length; i++) {
-        this.verseArray[i] = this.wholeVerseArray[i].split(" ");
-        this.verseArray[i] = this.verseArray[i].filter(s => s !== "");
-      }
-
-      // print and log check
-      console.log(this.wordBankSet);
-      console.log(this.verseArray);
-
-      // initiate verse and stuff
-      this.currentVerse = 1;
-      this.currentWord = 0;
-      this.correctWord = this.verseArray[this.currentVerse - 1][this.currentWord];
-      //document.getElementById("verseBox").innerHTML = "___";
-
-      // set buttons
-      setButtons();
-    }
-
-    function setButtons() {
-
-      // set correct button
-      let correctButtonRand = 1 + Math.floor(Math.random() * 5);
-      document.getElementById(correctButtonRand).innerHTML = this.correctWord;
-
-      // set other buttons
-      let randArray = [];
-      for (let i = 1; i <= 5; i++) {
-
-        // reset color
-        document.getElementById(i).style.background = "#ccf2ff";
-        if (document.getElementById(i).innerHTML != this.correctWord) {
-
-          let rand = Math.floor(Math.random() * this.wordBankSet.length);
-          while ((this.wordBankSet[rand] == this.correctWord) || (randArray.find(e => e == rand) >= 0)) {
-            rand = Math.floor(Math.random() * this.wordBankSet.length);
-          }
-          randArray.push(rand);
-
-          document.getElementById(i).innerHTML = this.wordBankSet[rand];
-        }
-      }
-    }
-
-    function select(id, word) {
-      console.log(id);
-      console.log(word);
-
-      // identify incorrect word
-      if (word != this.correctWord) {
-        document.getElementById(id).style.background = "red";
-      }
-
-      // for correct word, write in verse box
-      else {
-        if (this.currentWord == 0) {
-          this.boxText = word + "  ";
-        } else {
-          this.boxText = this.boxText + word + "  ";
-        }
-        //console.log(this.boxText);
-
-        document.getElementById("verseBox").innerHTML = this.boxText;
-
-        // if within this verse
-        if (this.currentWord < this.verseArray[this.currentVerse - 1].length - 1) {
-          // update word and buttons
-          this.currentWord++;
-          this.correctWord = this.verseArray[this.currentVerse - 1][this.currentWord];
-          console.log(this.currentWord);
-          console.log(this.correctWord);
-          setButtons();
-        }
-
-        // else update verse on last word
-        else {
-          // wait a second
-          const myTimeout = setTimeout(updateVerse, 2000);
-        }
-      }
-    }
-
-    function updateVerse() {
-      // if within number of verses in passage
-      if (this.currentVerse < this.verseArray.length) {
-        this.currentVerse++;
-        this.currentWord = 0;
-        this.correctWord = this.verseArray[this.currentVerse - 1][this.currentWord];
-        setButtons();
-        document.getElementById("verseBox").innerHTML = "___";
-        document.getElementById("verseNumberText").innerHTML = this.currentVerse;
-      }
-      // else end all
-      else {
-        alert("You did it, congratulations!");
-      }
-    }
-
-    function Game() {
-      this.numberVerses = 31;
-      this.currentVerse = 1;
-      this.currentWord = 0;
-      this.correctWord = "";
-      this.boxText = "";
-      this.wordBankSet = [];
-      this.wholeVerseArray = [];
-      this.verseArray = [];
-
-      this.start = start;
-      this.select = select;
-    }
-
-    // onload
-    window.onload = function() {
-      game1 = new Game();
-      this.start();
-
-    }
-
-  </script>
 </body>
+<script>
+  // build objects
+  function Word() {
+    this.letters = [];
+    this.usedLetters = [];
+    this.valid = false;
+    this.createWord = createWord;
+    this.checkWord = checkWord;
+    this.pushLetter = pushLetter;
+    this.deleteLetter = deleteLetter;
+  }
+
+  // api call to generate word and place in letters
+  async function createWord() {
+
+    this.letters = "test";
+
+    while (this.letters == "test") {
+      await fetch('https://random-word-api.herokuapp.com/word?number=10&swear=0')
+        .then(response => response.json())
+        .then(response => {
+          //console.log(response);
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].length == 5) {
+              this.letters = response[i].split("");
+              this.letters = this.letters.map(element => {
+                return element.toUpperCase();
+              });
+              console.log(this.letters);
+            }
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    // this.letters = ['A', 'A', 'B', 'B', 'B'];
+    this.usedLetters = [];
+    //console.log(this.letters);
+
+    // for debug mode show word
+    document.getElementById("word").innerHTML = this.letters;
+    document.getElementById("word").style.visibility = 'hidden';
+
+
+  }
+
+  // check valid word
+  async function checkValid() {
+
+
+
+    //console.log(this.usedLetters.join(""));
+    await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + this.usedLetters.join(""))
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        //console.log(response['title']);
+        if (response['title'] == "No Definitions Found") {
+          alert("invalid word");
+          this.valid = false;
+        } else {
+          this.valid = true;
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
+
+  // check letters of word
+  async function checkWord() {
+    if (this.usedLetters.length < 5) {
+      alert("You need to enter more letters");
+      return;
+    }
+    // call API to check if it's a valid word
+    await checkValid();
+    console.log(this.valid);
+
+    if (this.valid) {
+
+      let matchNum = 0;
+      for (let i = 0; i < this.letters.length; i++) {
+
+        // color in keyboard key
+        document.getElementById(this.usedLetters[i]).style.color = "red";
+
+        // check each letter to see if it matches in position
+        if (this.letters[i] == this.usedLetters[i]) {
+          console.log("match " + this.usedLetters[i] + " in position " + (i + 1));
+          // place on screen
+          document.getElementById(String(i + 1)).innerHTML = this.letters[i];
+          matchNum = matchNum + 1;
+        }
+
+        // check each letter to see if it's there at all
+        if (this.letters.includes(this.usedLetters[i])) {
+          console.log("match " + this.usedLetters[i] + " in wrong position");
+          // color in keyboard key only
+          document.getElementById(this.usedLetters[i]).style.color = "green";
+        }
+
+
+
+      }
+
+      // check for win condition
+      if (matchNum == 5) {
+        winGame();
+        return;
+      }
+
+      // reset
+      nextTurn();
+      this.usedLetters = [];
+      this.valid = false;
+    }
+
+
+  }
+
+
+  function pushLetter(char) {
+    if (this.usedLetters.length < 5) {
+      this.usedLetters.push(char);
+      //console.log(this.usedLetters);
+    }
+    document.getElementById("enteredWord").innerHTML = this.usedLetters;
+  }
+
+  function deleteLetter() {
+    this.usedLetters.pop();
+    document.getElementById("enteredWord").innerHTML = this.usedLetters;
+  }
+
+  function Game() {
+    this.turn = turn;
+    this.start = start;
+    this.debug = "";
+    this.debugToggle = debugToggle;
+    this.nextTurn = nextTurn;
+    this.winGame = winGame;
+  }
+
+  function debugToggle() {
+    //console.log(this.debug);
+    if (this.debug == false) {
+      this.debug = true;
+      document.getElementById("debug").innerHTML = "Debug is ON"
+      document.getElementById("word").style.visibility = 'visible'
+      return;
+    }
+    if (this.debug == true) {
+      this.debug = false;
+      document.getElementById("debug").innerHTML = "Debug is OFF"
+      document.getElementById("word").style.visibility = 'hidden'
+    }
+    return;
+  }
+  // start and restart function
+  function start() {
+    this.turn = 1;
+    this.debug = false;
+
+    // reset letter squares
+    document.getElementById("1").innerHTML = "_";
+    document.getElementById("2").innerHTML = "_";
+    document.getElementById("3").innerHTML = "_";
+    document.getElementById("4").innerHTML = "_";
+    document.getElementById("5").innerHTML = "_";
+
+    // reset keyboard
+    document.getElementById("keyboard").innerHTML = "";
+
+    // create keyboard
+    makeKeyboard();
+    // create word
+    word1 = new Word();
+    createWord();
+
+    // update UI
+    document.getElementById("turn").innerHTML = "Turn: " + this.turn;
+    document.getElementById("guess").innerHTML = "Your guess:";
+    document.getElementById("guess2").innerHTML = "Past guesses:";
+    document.getElementById("start").innerHTML = "Restart";
+    document.getElementById("enteredWord").innerHTML = "";
+    document.getElementById("pastWords").innerHTML = "";
+    document.getElementById("winGif").style.visibility = 'hidden';
+    document.getElementById("winGif").width = '0';
+  }
+
+  function nextTurn() {
+    if (this.turn < 6) {
+      this.turn = parseInt(this.turn + 1);
+      document.getElementById("enteredWord").innerHTML = "";
+      document.getElementById("turn").innerHTML = "Turn: " + this.turn;
+      document.getElementById("pastWords").innerHTML = document.getElementById("pastWords").innerHTML + this.usedLetters + "<br>";
+    } else {
+      alert("You lost, the word was " + this.letters.join("") + ". Starting new game...");
+      this.start();
+    }
+  }
+
+  function winGame() {
+
+    document.getElementById("winGif").style.visibility = 'visible';
+    document.getElementById("winGif").width = '400';
+    alert("Congratulations! You got the word " + this.letters.join("") + " right in " + this.turn + " turns!");
+    setTimeout(function() {
+      this.start();
+    }, 5000);
+
+  }
+
+
+  function makeKeyboard() {
+    // draw keyboard buttons
+
+    for (let i = 65; i <= 92; i++) {
+      const button = document.createElement('button');
+      const char = String.fromCharCode(i);
+      const span = document.createElement('span');
+      span.style.fontSize = '20px';
+      span.appendChild(document.createTextNode(char));
+      button.appendChild(span);
+      document.getElementById("keyboard").appendChild(button);
+      button.setAttribute('id', char);
+      button.style.padding = '10px';
+      button.style.margin = '2px';
+      button.onclick = function() {
+        //getLetter(char)
+        pushLetter(char)
+      };
+
+    }
+
+    // also create enter and backspace
+    document.getElementById("[").setAttribute('id', "Delete");
+    document.getElementById("Delete").innerHTML = "<span style=\"font-size: 20px;\">Delete</span>";
+    document.getElementById("Delete").onclick = function() {
+      //getLetter("Delete")
+      deleteLetter();
+    };
+    document.getElementById("\\").setAttribute('id', "Enter");
+    document.getElementById("Enter").innerHTML = "<span style=\"font-size: 20px;\">Enter</span>";
+    document.getElementById("Enter").onclick = function() {
+      //getLetter("Enter")
+      checkWord();
+    };
+
+
+    function getLetter(id) {
+      const letter = document.getElementById(id).textContent;
+      console.log(letter);
+    }
+  }
+
+  function hint() {
+
+    let rand = Math.floor((Math.random() * 26) + 65);
+    let randChar = String.fromCharCode(rand);
+
+    // check each letter to see if it's there at all
+    while (this.letters.includes(randChar)) {
+      rand = Math.floor((Math.random() * 26) + 65);
+      randChar = String.fromCharCode(rand);
+
+    }
+    // color in keyboard key only
+    document.getElementById(randChar).style.color = "red";
+    console.log("Getting hint for letter " + randChar);
+  }
+
+
+  // onload
+  window.onload = function() {
+    game1 = new Game();
+    // game1.start();
+
+  }
+
+</script>
